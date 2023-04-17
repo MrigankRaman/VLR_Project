@@ -49,6 +49,8 @@ def get_prefix_samples(root, folder_to_idx, extensions, shuffle=False):
     Returns:
         samples (list): a list of tuple where each element is (image, label)
     """
+    # import ipdb
+    # ipdb.set_trace()
     samples = []
     root = os.path.expanduser(root)
     for folder_name in sorted(os.listdir(root)):

@@ -6,6 +6,8 @@ import numpy as np
 import torch as th
 import torch.distributed as dist
 
+import ipdb
+
 from image_adapt.guided_diffusion import dist_util, logger
 from image_adapt.guided_diffusion.script_util import (
     model_and_diffusion_defaults,
@@ -21,6 +23,7 @@ from torch.nn.parallel.distributed import DistributedDataParallel as DDP
 
 # added
 def load_reference(data_dir, batch_size, image_size, class_cond=False, corruption="shot_noise", severity=5,):
+    print(image_size)
     data = load_data(
         data_dir=data_dir,
         batch_size=batch_size,
@@ -32,6 +35,7 @@ def load_reference(data_dir, batch_size, image_size, class_cond=False, corruptio
         severity=severity,
     )
     for large_batch, model_kwargs, filename in data:
+        # print(filename)
         model_kwargs["ref_img"] = large_batch
         yield model_kwargs, filename
 
@@ -125,7 +129,7 @@ def create_argparser():
         D=32, # scaling factor
         N=50,
         scale=1,
-        use_ddim=False,
+        use_ddim=True,
         base_samples="",
         model_path="",
         save_dir="",

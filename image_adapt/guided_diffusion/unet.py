@@ -608,7 +608,6 @@ class UNetModel(nn.Module):
                     ds //= 2
                 self.output_blocks.append(TimestepEmbedSequential(*layers))
                 self._feature_size += ch
-
         self.out = nn.Sequential(
             normalization(ch),
             nn.SiLU(),
@@ -659,7 +658,10 @@ class UNetModel(nn.Module):
         for module in self.output_blocks:
             h = th.cat([h, hs.pop()], dim=1)
             h = module(h, emb)
+            # print(h.shape)
         h = h.type(x.dtype)
+        # print(self.out(h).shape)
+        # exit()
         return self.out(h)
 
 

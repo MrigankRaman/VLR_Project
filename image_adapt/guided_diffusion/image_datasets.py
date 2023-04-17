@@ -43,15 +43,20 @@ def load_data(
         raise ValueError("unspecified data directory")
 
     data_prefix = os.path.join(data_dir, corruption, str(severity))
+    # print(data_prefix)
     folder_to_idx = find_folders(data_prefix)
+    # print(folder_to_idx)
+    # exit()
+    # import ipdb
+    # ipdb.set_trace()
     sample = get_prefix_samples(
         data_prefix,
         folder_to_idx,
-        extensions=["jpeg"],
+        extensions=["jpeg", "png"],
         shuffle=not deterministic
     )
     
-
+    # print(sample)
     all_files = []
     classes = []
     for img_prefix, filename, gt_label in sample:

@@ -10,6 +10,7 @@ import math
 
 import numpy as np
 import torch as th
+import ipdb
 
 from .nn import mean_flat
 from .losses import normal_kl, discretized_gaussian_log_likelihood
@@ -199,6 +200,8 @@ class GaussianDiffusion:
         if noise is None:
             noise = th.randn_like(x_start)
         assert noise.shape == x_start.shape
+        # import ipdb
+        # ipdb.set_trace()
         return (
             _extract_into_tensor(self.sqrt_alphas_cumprod, t, x_start.shape) * x_start
             + _extract_into_tensor(self.sqrt_one_minus_alphas_cumprod, t, x_start.shape)
@@ -257,7 +260,7 @@ class GaussianDiffusion:
 
         B, C = x.shape[:2]
         assert t.shape == (B,)
-        model_output = model(x, self._scale_timesteps(t), **model_kwargs)
+        model_output = model(x, self._scale_timesteps(t))#, **model_kwargs)
 
         if self.model_var_type in [ModelVarType.LEARNED, ModelVarType.LEARNED_RANGE]:
             assert model_output.shape == (B, C * 2, *x.shape[2:])
@@ -525,6 +528,8 @@ class GaussianDiffusion:
         if noise is not None:
             img = noise
             if N is not None:
+                # print(N)
+                # exit()
                 t = th.tensor([N] * shape[0], device=device)
                 img = self.q_sample(noise, t, th.randn(*shape, device=device))
                 indices = list(range(N))[::-1]
